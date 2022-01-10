@@ -58,6 +58,9 @@ namespace PCHardwareMonitor.UI
         private readonly UserOption _runWebServer;
         private readonly UserOption _logSensors;
         private readonly UserRadioGroup _loggingInterval;
+        private readonly UserOption _cloudReport;
+        private readonly UserRadioGroup _reportingInterval;
+        private readonly CloudReporter _cloudReporter;
         private readonly UserRadioGroup _sensorValuesTimeWindow;
         private readonly Logger _logger;
 
@@ -143,6 +146,7 @@ namespace PCHardwareMonitor.UI
             nodeTextBoxText.ToolTipProvider = tooltipProvider;
             nodeTextBoxValue.ToolTipProvider = tooltipProvider;
             _logger = new Logger(_computer);
+            _cloudReporter = new CloudReporter();
 
             _plotColorPalette = new Color[13];
             _plotColorPalette[0] = Color.Blue;
@@ -313,6 +317,19 @@ namespace PCHardwareMonitor.UI
                     case 10: _logger.LoggingInterval = new TimeSpan(1, 0, 0); break;
                     case 11: _logger.LoggingInterval = new TimeSpan(2, 0, 0); break;
                     case 12: _logger.LoggingInterval = new TimeSpan(6, 0, 0); break;
+                }
+            };
+
+            _cloudReport = new UserOption("cloudReportMenuItem", true, cloudReportMenuItem, _settings);
+
+            _reportingInterval = new UserRadioGroup("reportingInterval", 0,
+                new[] { report1sMenuItem, report5sMenuItem}, _settings);
+            _reportingInterval.Changed += (sender, e) =>
+            {
+                switch (_reportingInterval.Value)
+                {
+                    case 0: _cloudReporter.ReportingInterval = new TimeSpan(0, 0, 1); break;
+                    case 1: _cloudReporter.ReportingInterval = new TimeSpan(0, 0, 5); break;
                 }
             };
 
@@ -646,6 +663,9 @@ namespace PCHardwareMonitor.UI
 
             if (_logSensors != null && _logSensors.Value && _delayCount >= 4)
                 _logger.Log();
+
+            if (_cloudReport != null && _cloudReport.Value && _delayCount >= 4)
+                _ = _cloudReporter.CloudReportAsync(_root);
 
             if (_delayCount < 4)
                 _delayCount++;
