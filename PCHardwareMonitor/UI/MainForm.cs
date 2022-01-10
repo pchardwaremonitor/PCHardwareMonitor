@@ -322,7 +322,7 @@ namespace PCHardwareMonitor.UI
 
             _cloudReport = new UserOption("cloudReportMenuItem", true, cloudReportMenuItem, _settings);
 
-            _reportingInterval = new UserRadioGroup("reportingInterval", 0,
+            _reportingInterval = new UserRadioGroup("reportingInterval", 1,
                 new[] { report1sMenuItem, report5sMenuItem}, _settings);
             _reportingInterval.Changed += (sender, e) =>
             {
@@ -1074,5 +1074,10 @@ namespace PCHardwareMonitor.UI
         }
 
         public bool AuthWebServerMenuItemChecked { get { return authWebServerMenuItem.Checked; } set { authWebServerMenuItem.Checked = value; } }
+
+        private void CloudTokenMenuItem_Click(object sender, EventArgs e)
+        {
+            new CloudForm(this).ShowDialog();
+        }
     }
 }

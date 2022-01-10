@@ -14,6 +14,7 @@ namespace PCHardwareMonitor.Utilities
 {
     internal class CloudReporter
     {
+        private string _fileName;
         private DateTime _lastLoggedTime = DateTime.MinValue;
 
         private static readonly HttpClient client = new HttpClient();
@@ -22,7 +23,7 @@ namespace PCHardwareMonitor.Utilities
 
         public CloudReporter()
         {
-
+            _fileName = GetFileName();
         }
 
         public async Task CloudReportAsync(Node root)
@@ -38,15 +39,13 @@ namespace PCHardwareMonitor.Utilities
 
             json["id"] = nodeIndex++;
             json["Text"] = "PCHardwareMonitor";
-            json["APIKey"] = "APIKeyHere";
+            json["APIKey"] = "";
 
             JArray children = new JArray { GenerateJsonForNode(root, ref nodeIndex) };
             json["Children"] = children;
-#if DEBUG
-            string reportData = json.ToString(Newtonsoft.Json.Formatting.Indented);
-#else
+
+            string reportDataFile = json.ToString(Newtonsoft.Json.Formatting.Indented);
             string reportData = json.ToString(Newtonsoft.Json.Formatting.None);
-#endif
 
             string compressedData = string.Empty;
             using (MemoryStream source = new MemoryStream(Encoding.UTF8.GetBytes(reportData)))
@@ -61,14 +60,36 @@ namespace PCHardwareMonitor.Utilities
 
             string cloudJsonData = "{\"Data\": \"" + compressedData + "\"}";
 
-            using (var client = new HttpClient())
+            using (var client = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) })
             {
-                HttpResponseMessage response = await client.PostAsync(
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsync(
                     "http://127.0.0.1:8000/monitor/",
                      new StringContent(cloudJsonData, Encoding.UTF8, "application/json"));
+                }
+                catch (Exception e) { }
             }
+            WriteReportFile(reportDataFile);
 
             _lastLoggedTime = now;
+        }
+
+        private void WriteReportFile(string reportData)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)))
+                {
+                    writer.Write(reportData);
+                }
+            }
+            catch (IOException) { }
+        }
+
+        private static string GetFileName()
+        {
+            return AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "PCHardwareMonitorCloudReport.txt";
         }
 
         private JObject GenerateJsonForNode(Node n, ref int nodeIndex)

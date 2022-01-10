@@ -114,6 +114,11 @@ namespace PCHardwareMonitor.UI
             this.timeWindow6hMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
             this.timeWindow12hMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
             this.timeWindow24hMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
+            this.cloudReportSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cloudReportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportingIntervalMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.report1sMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
+            this.report5sMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
             this.webMenuItemSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.webMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runWebServerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -126,11 +131,7 @@ namespace PCHardwareMonitor.UI
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.splitContainer = new PCHardwareMonitor.UI.SplitContainerAdv();
             this.treeView = new Aga.Controls.Tree.TreeViewAdv();
-            this.cloudReportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cloudReportSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.reportingIntervalMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.report1sMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
-            this.report5sMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
+            this.cloudTokenMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -428,6 +429,7 @@ namespace PCHardwareMonitor.UI
             this.sensorValuesTimeWindowMenuItem,
             this.cloudReportSeparator,
             this.cloudReportMenuItem,
+            this.cloudTokenMenuItem,
             this.reportingIntervalMenuItem,
             this.webMenuItemSeparator,
             this.webMenuItem});
@@ -737,6 +739,40 @@ namespace PCHardwareMonitor.UI
             this.timeWindow24hMenuItem.Size = new System.Drawing.Size(107, 22);
             this.timeWindow24hMenuItem.Text = "24h";
             // 
+            // cloudReportSeparator
+            // 
+            this.cloudReportSeparator.Name = "cloudReportSeparator";
+            this.cloudReportSeparator.Size = new System.Drawing.Size(218, 6);
+            // 
+            // cloudReportMenuItem
+            // 
+            this.cloudReportMenuItem.Name = "cloudReportMenuItem";
+            this.cloudReportMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.cloudReportMenuItem.Text = "Cloud Report";
+            // 
+            // reportingIntervalMenuItem
+            // 
+            this.reportingIntervalMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.report1sMenuItem,
+            this.report5sMenuItem});
+            this.reportingIntervalMenuItem.Name = "reportingIntervalMenuItem";
+            this.reportingIntervalMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.reportingIntervalMenuItem.Text = "Reporting Interval";
+            // 
+            // report1sMenuItem
+            // 
+            this.report1sMenuItem.CheckOnClick = true;
+            this.report1sMenuItem.Name = "report1sMenuItem";
+            this.report1sMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.report1sMenuItem.Text = "1s";
+            // 
+            // report5sMenuItem
+            // 
+            this.report5sMenuItem.CheckOnClick = true;
+            this.report5sMenuItem.Name = "report5sMenuItem";
+            this.report5sMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.report5sMenuItem.Text = "5s";
+            // 
             // webMenuItemSeparator
             // 
             this.webMenuItemSeparator.Name = "webMenuItemSeparator";
@@ -783,7 +819,7 @@ namespace PCHardwareMonitor.UI
             // aboutMenuItem
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutMenuItem.Text = "About";
             this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
             // 
@@ -860,39 +896,12 @@ namespace PCHardwareMonitor.UI
             this.treeView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TreeView_MouseMove);
             this.treeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TreeView_MouseUp);
             // 
-            // cloudReportMenuItem
+            // cloudTokenMenuItem
             // 
-            this.cloudReportMenuItem.Name = "cloudReportMenuItem";
-            this.cloudReportMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.cloudReportMenuItem.Text = "Cloud Report";
-            // 
-            // cloudReportSeparator
-            // 
-            this.cloudReportSeparator.Name = "cloudReportSeparator";
-            this.cloudReportSeparator.Size = new System.Drawing.Size(218, 6);
-            // 
-            // reportingIntervalMenuItem
-            // 
-            this.reportingIntervalMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.report1sMenuItem,
-            this.report5sMenuItem});
-            this.reportingIntervalMenuItem.Name = "reportingIntervalMenuItem";
-            this.reportingIntervalMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.reportingIntervalMenuItem.Text = "Reporting Interval";
-            // 
-            // report1sMenuItem
-            // 
-            this.report1sMenuItem.CheckOnClick = true;
-            this.report1sMenuItem.Name = "report1sMenuItem";
-            this.report1sMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.report1sMenuItem.Text = "1s";
-            // 
-            // report5sMenuItem
-            // 
-            this.report5sMenuItem.CheckOnClick = true;
-            this.report5sMenuItem.Name = "report5sMenuItem";
-            this.report5sMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.report5sMenuItem.Text = "5s";
+            this.cloudTokenMenuItem.Name = "cloudTokenMenuItem";
+            this.cloudTokenMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.cloudTokenMenuItem.Text = "Cloud Token";
+            this.cloudTokenMenuItem.Click += new System.EventHandler(this.CloudTokenMenuItem_Click);
             // 
             // MainForm
             // 
@@ -1016,6 +1025,7 @@ namespace PCHardwareMonitor.UI
         private System.Windows.Forms.ToolStripMenuItem reportingIntervalMenuItem;
         private ToolStripRadioButtonMenuItem report1sMenuItem;
         private ToolStripRadioButtonMenuItem report5sMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cloudTokenMenuItem;
     }
 }
 
