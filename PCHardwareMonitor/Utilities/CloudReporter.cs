@@ -17,12 +17,13 @@ namespace PCHardwareMonitor.Utilities
         private string _fileName;
         private DateTime _lastLoggedTime = DateTime.MinValue;
 
-        private static readonly HttpClient client = new HttpClient();
+        public string APIToken;
 
         public TimeSpan ReportingInterval { get; set; }
 
-        public CloudReporter()
+        public CloudReporter(string apiToken)
         {
+            APIToken = apiToken;
             _fileName = GetFileName();
         }
 
@@ -39,7 +40,7 @@ namespace PCHardwareMonitor.Utilities
 
             json["id"] = nodeIndex++;
             json["Text"] = "PCHardwareMonitor";
-            json["APIKey"] = "";
+            json["APIToken"] = APIToken;
 
             JArray children = new JArray { GenerateJsonForNode(root, ref nodeIndex) };
             json["Children"] = children;

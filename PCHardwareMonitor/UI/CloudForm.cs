@@ -27,7 +27,13 @@ namespace PCHardwareMonitor.UI
 
         private void CloudOKButton_Click(object sender, EventArgs e)
         {
+            _parent.SetToken(cloudTokenTextBox.Text);
             Close();
+        }
+
+        private void CloudForm_Load(object sender, EventArgs e)
+        {
+            cloudTokenTextBox.Text = _parent.GetToken();
         }
     }
 }

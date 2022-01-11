@@ -146,7 +146,7 @@ namespace PCHardwareMonitor.UI
             nodeTextBoxText.ToolTipProvider = tooltipProvider;
             nodeTextBoxValue.ToolTipProvider = tooltipProvider;
             _logger = new Logger(_computer);
-            _cloudReporter = new CloudReporter();
+            _cloudReporter = new CloudReporter(GetToken());
 
             _plotColorPalette = new Color[13];
             _plotColorPalette[0] = Color.Blue;
@@ -689,6 +689,8 @@ namespace PCHardwareMonitor.UI
             _settings.SetValue("authenticationUserName", Server.UserName);
             _settings.SetValue("authenticationPassword", Server.Password);
 
+            _settings.SetValue("apiToken", _cloudReporter.APIToken);
+
             string fileName = Path.ChangeExtension(Application.ExecutablePath, ".config");
 
             try
@@ -1078,6 +1080,17 @@ namespace PCHardwareMonitor.UI
         private void CloudTokenMenuItem_Click(object sender, EventArgs e)
         {
             new CloudForm(this).ShowDialog();
+        }
+
+        public string GetToken()
+        {
+            return _settings.GetValue("apiToken", "");
+        }
+
+        public void SetToken(string apiToken)
+        {
+            _settings.SetValue("apiToken", apiToken);
+            _cloudReporter.APIToken = apiToken;
         }
     }
 }
