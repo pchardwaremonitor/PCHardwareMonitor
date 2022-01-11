@@ -655,6 +655,17 @@ namespace PCHardwareMonitor.UI
         {
             _computer.Accept(_updateVisitor);
 
+            if(GetToken() == "")
+            {
+                statusBarTextLabel.ForeColor = Color.Red;
+                statusBarTextLabel.Text = "Cloud Token is not set. Go to Options -> Cloud Token to set it.";
+            }
+            else
+            {
+                statusBarTextLabel.ForeColor = Color.Black;
+                statusBarTextLabel.Text = "Cloud reporting OK.";
+            }
+
             treeView.Invalidate();
             _plotPanel.InvalidatePlot();
             _systemTray.Redraw();

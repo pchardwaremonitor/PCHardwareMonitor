@@ -61,7 +61,7 @@ namespace PCHardwareMonitor.Utilities
 
             string cloudJsonData = "{\"Data\": \"" + compressedData + "\"}";
 
-            using (var client = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) })
+            using (var client = new HttpClient() { Timeout = TimeSpan.FromSeconds(4) })
             {
                 try
                 {
