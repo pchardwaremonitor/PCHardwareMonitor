@@ -4,17 +4,10 @@
 PC Hardware Monitor, a fork of Libre Hardware Monitor, is free software that can monitor the temperature sensors, fan speeds, voltages, load and clock speeds of your computer. 
 
 ## What's included?
-<<<<<<< HEAD
 | Name| .NET |
 | --- | --- |
-| **PCHardwareMonitor** <br /> Windows Forms based application that presents all data in a graphical interface | .NET Framework 4.5.2 |
-| **PCHardwareMonitorLib** <br /> Library that allows you to use all features in your own application | .NET Framework 4.5.2,<br />.NET Standard 2.0,<br />.NET 5.0,<br />.NET 6.0 |
-=======
-| Name| .NET | Build Status |
-| --- | --- | --- | 
-| **LibreHardwareMonitor** <br /> Windows Forms based application that presents all data in a graphical interface | .NET Framework 4.7.2 | [![Build status](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/workflows/CI/badge.svg)](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/actions) | 
-| **LibreHardwareMonitorLib** <br /> Library that allows you to use all features in your own application | .NET Framework 4.7,<br />.NET Standard 2.0,<br />.NET 5.0,<br />.NET 6.0 | [![Build status](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/workflows/CI/badge.svg)](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/actions) | 
->>>>>>> 5315209091ac1a9ab0ee9f7a56e936e3b2ee79d8
+| **PCHardwareMonitor** <br /> Windows Forms based application that presents all data in a graphical interface | .NET Framework 4.7.2 |
+| **PCHardwareMonitorLib** <br /> Library that allows you to use all features in your own application | .NET Framework 4.7,<br />.NET Standard 2.0,<br />.NET 5.0,<br />.NET 6.0 |
 
 ## What can you do?
 With the help of PCHardwareMonitor you can read information from devices such as:
