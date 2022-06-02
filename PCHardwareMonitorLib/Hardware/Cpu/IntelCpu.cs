@@ -18,9 +18,11 @@ namespace PCHardwareMonitor.Hardware.CPU
         private readonly Sensor[] _coreClocks;
         private readonly Sensor _coreMax;
         private readonly Sensor[] _coreTemperatures;
+        private readonly Sensor _coreVoltage;
+        private readonly Sensor[] _coreVIDs;
         private readonly Sensor[] _distToTjMaxTemperatures;
 
-        private readonly uint[] _energyStatusMsrs = { MSR_PKG_ENERY_STATUS, MSR_PP0_ENERY_STATUS, MSR_PP1_ENERY_STATUS, MSR_DRAM_ENERGY_STATUS };
+        private readonly uint[] _energyStatusMsrs = { MSR_PKG_ENERGY_STATUS, MSR_PP0_ENERGY_STATUS, MSR_PP1_ENERGY_STATUS, MSR_DRAM_ENERGY_STATUS };
         private readonly float _energyUnitMultiplier;
         private readonly uint[] _lastEnergyConsumed;
         private readonly DateTime[] _lastEnergyTime;
@@ -30,8 +32,13 @@ namespace PCHardwareMonitor.Hardware.CPU
         private readonly Sensor[] _powerSensors;
         private readonly double _timeStampCounterMultiplier;
 
+        public float EnergyUnitsMultiplier => _energyUnitMultiplier;
+
         public IntelCpu(int processorIndex, CpuId[][] cpuId, ISettings settings) : base(processorIndex, cpuId, settings)
         {
+            uint eax;
+            uint edx;
+
             // set tjMax
             float[] tjMax;
             switch (_family)
@@ -235,7 +242,7 @@ namespace PCHardwareMonitor.Hardware.CPU
                 case MicroArchitecture.Core:
                 case MicroArchitecture.NetBurst:
                 {
-                    if (Ring0.ReadMsr(IA32_PERF_STATUS, out uint _, out uint edx))
+                    if (Ring0.ReadMsr(IA32_PERF_STATUS, out uint _, out edx))
                     {
                         _timeStampCounterMultiplier = ((edx >> 8) & 0x1f) + 0.5 * ((edx >> 14) & 1);
                     }
@@ -262,7 +269,7 @@ namespace PCHardwareMonitor.Hardware.CPU
                 case MicroArchitecture.TigerLake:
                 case MicroArchitecture.Tremont:
                 {
-                    if (Ring0.ReadMsr(MSR_PLATFORM_INFO, out uint eax, out uint _))
+                    if (Ring0.ReadMsr(MSR_PLATFORM_INFO, out eax, out uint _))
                     {
                         _timeStampCounterMultiplier = (eax >> 8) & 0xff;
                     }
@@ -380,7 +387,7 @@ namespace PCHardwareMonitor.Hardware.CPU
                 _lastEnergyTime = new DateTime[_energyStatusMsrs.Length];
                 _lastEnergyConsumed = new uint[_energyStatusMsrs.Length];
 
-                if (Ring0.ReadMsr(MSR_RAPL_POWER_UNIT, out uint eax, out uint _))
+                if (Ring0.ReadMsr(MSR_RAPL_POWER_UNIT, out eax, out uint _))
                     switch (_microArchitecture)
                     {
                         case MicroArchitecture.Silvermont:
@@ -401,6 +408,9 @@ namespace PCHardwareMonitor.Hardware.CPU
                         if (!Ring0.ReadMsr(_energyStatusMsrs[i], out eax, out uint _))
                             continue;
 
+                        // Don't show the "GPU Graphics" sensor on windows, it will show up under the GPU instead.
+                        if (i == 2 && !Software.OperatingSystem.IsUnix)
+                            continue;
 
                         _lastEnergyTime[i] = DateTime.UtcNow;
                         _lastEnergyConsumed[i] = eax;
@@ -413,6 +423,19 @@ namespace PCHardwareMonitor.Hardware.CPU
                         ActivateSensor(_powerSensors[i]);
                     }
                 }
+            }
+
+            if (Ring0.ReadMsr(IA32_PERF_STATUS, out eax, out uint _) && ((eax >> 32) & 0xFFFF) > 0)
+            {
+                _coreVoltage = new Sensor("CPU Core", 0, SensorType.Voltage, this, settings);
+                ActivateSensor(_coreVoltage);
+            }
+
+            _coreVIDs = new Sensor[_coreCount];
+            for (int i = 0; i < _coreVIDs.Length; i++)
+            {
+                _coreVIDs[i] = new Sensor(CoreString(i), i + 1, SensorType.Voltage, this, settings);
+                ActivateSensor(_coreVIDs[i]);
             }
 
             Update();
@@ -451,10 +474,10 @@ namespace PCHardwareMonitor.Hardware.CPU
                 IA32_TEMPERATURE_TARGET,
                 IA32_PACKAGE_THERM_STATUS,
                 MSR_RAPL_POWER_UNIT,
-                MSR_PKG_ENERY_STATUS,
+                MSR_PKG_ENERGY_STATUS,
                 MSR_DRAM_ENERGY_STATUS,
-                MSR_PP0_ENERY_STATUS,
-                MSR_PP1_ENERY_STATUS
+                MSR_PP0_ENERGY_STATUS,
+                MSR_PP1_ENERGY_STATUS
             };
         }
 
@@ -476,11 +499,13 @@ namespace PCHardwareMonitor.Hardware.CPU
 
             float coreMax = float.MinValue;
             float coreAvg = 0;
+            uint eax = 0;
+            uint edx;
 
             for (int i = 0; i < _coreTemperatures.Length; i++)
             {
                 // if reading is valid
-                if (Ring0.ReadMsr(IA32_THERM_STATUS_MSR, out uint eax, out uint _, _cpuId[i][0].Affinity) && (eax & 0x80000000) != 0)
+                if (Ring0.ReadMsr(IA32_THERM_STATUS_MSR, out eax, out uint _, _cpuId[i][0].Affinity) && (eax & 0x80000000) != 0)
                 {
                     // get the dist from tjMax from bits 22:16
                     float deltaT = (eax & 0x007F0000) >> 16;
@@ -512,7 +537,7 @@ namespace PCHardwareMonitor.Hardware.CPU
             if (_packageTemperature != null)
             {
                 // if reading is valid
-                if (Ring0.ReadMsr(IA32_PACKAGE_THERM_STATUS, out uint eax, out uint _, _cpuId[0][0].Affinity) && (eax & 0x80000000) != 0)
+                if (Ring0.ReadMsr(IA32_PACKAGE_THERM_STATUS, out eax, out uint _, _cpuId[0][0].Affinity) && (eax & 0x80000000) != 0)
                 {
                     // get the dist from tjMax from bits 22:16
                     float deltaT = (eax & 0x007F0000) >> 16;
@@ -532,7 +557,7 @@ namespace PCHardwareMonitor.Hardware.CPU
                 for (int i = 0; i < _coreClocks.Length; i++)
                 {
                     System.Threading.Thread.Sleep(1);
-                    if (Ring0.ReadMsr(IA32_PERF_STATUS, out uint eax, out uint _, _cpuId[i][0].Affinity))
+                    if (Ring0.ReadMsr(IA32_PERF_STATUS, out eax, out uint _, _cpuId[i][0].Affinity))
                     {
                         newBusClock = TimeStampCounterFrequency / _timeStampCounterMultiplier;
                         switch (_microArchitecture)
@@ -595,7 +620,7 @@ namespace PCHardwareMonitor.Hardware.CPU
                     if (sensor == null)
                         continue;
 
-                    if (!Ring0.ReadMsr(_energyStatusMsrs[sensor.Index], out uint eax, out uint _))
+                    if (!Ring0.ReadMsr(_energyStatusMsrs[sensor.Index], out eax, out uint _))
                         continue;
 
 
@@ -609,6 +634,24 @@ namespace PCHardwareMonitor.Hardware.CPU
                     sensor.Value = _energyUnitMultiplier * unchecked(energyConsumed - _lastEnergyConsumed[sensor.Index]) / deltaTime;
                     _lastEnergyTime[sensor.Index] = time;
                     _lastEnergyConsumed[sensor.Index] = energyConsumed;
+                }
+            }
+
+            if (_coreVoltage != null && Ring0.ReadMsr(IA32_PERF_STATUS, out _, out edx))
+            {
+                _coreVoltage.Value = ((edx >> 32) & 0xFFFF) / (float)(1 << 13);
+            }
+
+            for (int i = 0; i < _coreVIDs.Length; i++)
+            {
+                if (Ring0.ReadMsr(IA32_PERF_STATUS, out _, out edx, _cpuId[i][0].Affinity) && ((edx >> 32) & 0xFFFF) > 0)
+                {
+                    _coreVIDs[i].Value = ((edx >> 32) & 0xFFFF) / (float)(1 << 13);
+                    ActivateSensor(_coreVIDs[i]);
+                }
+                else
+                {
+                    DeactivateSensor(_coreVIDs[i]);
                 }
             }
         }
@@ -648,10 +691,10 @@ namespace PCHardwareMonitor.Hardware.CPU
         private const uint IA32_THERM_STATUS_MSR = 0x019C;
 
         private const uint MSR_DRAM_ENERGY_STATUS = 0x619;
-        private const uint MSR_PKG_ENERY_STATUS = 0x611;
+        private const uint MSR_PKG_ENERGY_STATUS = 0x611;
         private const uint MSR_PLATFORM_INFO = 0xCE;
-        private const uint MSR_PP0_ENERY_STATUS = 0x639;
-        private const uint MSR_PP1_ENERY_STATUS = 0x641;
+        private const uint MSR_PP0_ENERGY_STATUS = 0x639;
+        private const uint MSR_PP1_ENERGY_STATUS = 0x641;
 
         private const uint MSR_RAPL_POWER_UNIT = 0x606;
         // ReSharper restore InconsistentNaming

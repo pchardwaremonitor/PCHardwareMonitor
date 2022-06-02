@@ -30,6 +30,7 @@ namespace PCHardwareMonitor.Hardware
         SmallData, // MB = 2^20 Bytes
         Throughput, // B/s
         TimeSpan, // Seconds 
+        Energy // milliwatt-hour (mWh)
     }
 
     /// <summary>

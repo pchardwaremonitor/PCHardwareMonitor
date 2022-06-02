@@ -19,6 +19,9 @@ namespace PCHardwareMonitor.Hardware
 
         public static bool Open()
         {
+            if (Software.OperatingSystem.IsUnix)
+                return false;
+
             if (IsOpen)
                 return true;
 
