@@ -234,6 +234,7 @@ namespace PCHardwareMonitor.Hardware.Motherboard
 
                     break;
                 }
+                case Chip.IT8613E:
                 case Chip.IT8620E:
                 case Chip.IT8628E:
                 case Chip.IT8631E:
@@ -251,6 +252,7 @@ namespace PCHardwareMonitor.Hardware.Motherboard
 
                     break;
                 }
+                case Chip.IT8695E:
                 case Chip.IT879XE:
                 {
                     GetIteConfigurationsC(superIO, manufacturer, model, v, t, f, c);
@@ -1332,6 +1334,8 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             break;
                         }
                         case Model.B560M_AORUS_ELITE: // IT8689E
+                        case Model.B560M_AORUS_PRO:
+                        case Model.B560M_AORUS_PRO_AX:
                         {
                             v.Add(new Voltage("Vcore", 0));
                             v.Add(new Voltage("+3.3V", 1, 29.4f, 45.3f));
@@ -1353,16 +1357,47 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             f.Add(new Fan("System Fan #1", 1));
                             f.Add(new Fan("System Fan #2", 2));
                             f.Add(new Fan("System Fan #3", 3));
-                            f.Add(new Fan("CPU OPT Fan", 4));
+                            f.Add(new Fan("CPU Optional Fan", 4));
                             c.Add(new Ctrl("CPU Fan", 0));
                             c.Add(new Ctrl("System Fan #1", 1));
                             c.Add(new Ctrl("System Fan #2", 2));
                             c.Add(new Ctrl("System Fan #3", 3));
-                            c.Add(new Ctrl("CPU OPT Fan", 4));
+                            c.Add(new Ctrl("CPU Optional Fan", 4));
+
+                            break;
+                        }
+                        case Model.B360_AORUS_GAMING_3_WIFI_CF: // IT8688E
+                        {
+                            v.Add(new Voltage("Vcore", 0));
+                            v.Add(new Voltage("+3.3V", 1, 29.4f, 45.3f));
+                            v.Add(new Voltage("+12V", 2, 10f, 2f));
+                            v.Add(new Voltage("+5V", 3, 15f, 10f));
+                            v.Add(new Voltage("CPU Vcore", 4, 0, 1));
+                            v.Add(new Voltage("CPU VCCSA", 5, 0, 1));
+                            v.Add(new Voltage("DIMM AB", 6, 0, 1));
+                            v.Add(new Voltage("3VSB", 7, 1, 1));
+                            v.Add(new Voltage("VBat", 8, 1, 1));
+                            t.Add(new Temperature("System #1", 0));
+                            t.Add(new Temperature("EC_TEMP1", 1));
+                            t.Add(new Temperature("CPU", 2));
+                            t.Add(new Temperature("PCIe x16", 3));
+                            t.Add(new Temperature("VRM MOS", 4));
+                            t.Add(new Temperature("PCH", 5));
+                            f.Add(new Fan("CPU Fan", 0));
+                            f.Add(new Fan("System Fan #1", 1));
+                            f.Add(new Fan("System Fan #2", 2));
+                            f.Add(new Fan("PCH Fan", 3));
+                            f.Add(new Fan("CPU Optional Fan", 4));
+                            c.Add(new Ctrl("CPU Fan", 0));
+                            c.Add(new Ctrl("System Fan #1", 1));
+                            c.Add(new Ctrl("System Fan #2", 2));
+                            c.Add(new Ctrl("PCH Fan", 3));
+                            c.Add(new Ctrl("CPU Optional Fan", 4));
 
                             break;
                         }
                         case Model.X570_AORUS_MASTER: // IT8688E
+                        case Model.X570_AORUS_ULTRA:
                         {
                             v.Add(new Voltage("Vcore", 0));
                             v.Add(new Voltage("+3.3V", 1, 29.4f, 45.3f));
@@ -1383,12 +1418,12 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             f.Add(new Fan("System Fan #1", 1));
                             f.Add(new Fan("System Fan #2", 2));
                             f.Add(new Fan("PCH Fan", 3));
-                            f.Add(new Fan("CPU OPT Fan", 4));
+                            f.Add(new Fan("CPU Optional Fan", 4));
                             c.Add(new Ctrl("CPU Fan", 0));
                             c.Add(new Ctrl("System Fan #1", 1));
                             c.Add(new Ctrl("System Fan #2", 2));
                             c.Add(new Ctrl("PCH Fan", 3));
-                            c.Add(new Ctrl("CPU OPT Fan", 4));
+                            c.Add(new Ctrl("CPU Optional Fan", 4));
 
                             break;
                         }
@@ -1411,12 +1446,12 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             f.Add(new Fan("System Fan #1", 1));
                             f.Add(new Fan("System Fan #2", 2));
                             f.Add(new Fan("PCH Fan", 3));
-                            f.Add(new Fan("CPU OPT Fan", 4));
+                            f.Add(new Fan("CPU Optional Fan", 4));
                             c.Add(new Ctrl("CPU Fan", 0));
                             c.Add(new Ctrl("System Fan #1", 1));
                             c.Add(new Ctrl("System Fan #2", 2));
                             c.Add(new Ctrl("PCH Fan", 3));
-                            c.Add(new Ctrl("CPU OPT Fan", 4));
+                            c.Add(new Ctrl("CPU Optional Fan", 4));
 
                             break;
                         }
@@ -1482,6 +1517,47 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             c.Add(new Ctrl("System Fan #3", 3));
                             c.Add(new Ctrl("CPU Optional Fan", 4));
 
+                            break;
+                        }
+                        case Model.Z690_AORUS_PRO:
+                        {
+                            t.Add(new Temperature("System #1", 0));
+                            t.Add(new Temperature("System #2", 1));
+                            t.Add(new Temperature("CPU", 2));
+                            t.Add(new Temperature("PCIe x16", 3));
+                            t.Add(new Temperature("VRM MOS", 4));
+                            f.Add(new Fan("CPU Fan", 0));
+                            f.Add(new Fan("System Fan #1", 1));
+                            f.Add(new Fan("System Fan #2", 2));
+                            f.Add(new Fan("System Fan #3", 3));
+                            f.Add(new Fan("CPU Optional Fan", 4));
+                            c.Add(new Ctrl("CPU Fan", 0));
+                            c.Add(new Ctrl("System Fan #1", 1));
+                            c.Add(new Ctrl("System Fan #2", 2));
+                            c.Add(new Ctrl("System Fan #3", 3));
+                            c.Add(new Ctrl("CPU Optional Fan", 4));
+                            break;
+                        }
+                        case Model.Z690_GAMING_X_DDR4:
+                        {
+                            t.Add(new Temperature("System #1", 0));
+                            t.Add(new Temperature("PCH", 1));
+                            t.Add(new Temperature("CPU", 2));
+                            t.Add(new Temperature("PCIe x16", 3));
+                            t.Add(new Temperature("VRM MOS", 4));
+                            t.Add(new Temperature("System #2", 5));
+                            f.Add(new Fan("CPU Fan", 0));
+                            f.Add(new Fan("System Fan #1", 1));
+                            f.Add(new Fan("System Fan #2", 2));
+                            f.Add(new Fan("System Fan #3", 3));
+                            f.Add(new Fan("CPU Optional Fan", 4));
+                            f.Add(new Fan("System Fan #4 / Pump", 5));
+                            c.Add(new Ctrl("CPU Fan", 0));
+                            c.Add(new Ctrl("System Fan #1", 1));
+                            c.Add(new Ctrl("System Fan #2", 2));
+                            c.Add(new Ctrl("System Fan #3", 3));
+                            c.Add(new Ctrl("CPU Optional Fan", 4));
+                            c.Add(new Ctrl("System Fan #4 / Pump", 5));
                             break;
                         }
                         case Model.Z68A_D3H_B3: // IT8728F
@@ -1596,6 +1672,65 @@ namespace PCHardwareMonitor.Hardware.Motherboard
 
                     break;
                 }
+                case Manufacturer.Biostar:
+                {
+                    switch (model)
+                    {
+                        case Model.B660GTN: //IT8613E 
+                            // This board has some problems with their app controlling fans that I was able to replicate here so I guess is a BIOS problem with the pins.
+                            // Biostar is aware so expect changes in the control pins with new bios.
+                            // In the meantime, it's possible to control CPUFAN and CPUOPT1m but not SYSFAN1.
+                        {
+                            // The parameters are extracted from the Biostar app config file. 
+                            v.Add(new Voltage("Vcore", 0, 0, 1));
+                            v.Add(new Voltage("DIMM", 1, 0, 1));
+                            v.Add(new Voltage("+12V", 2, 5, 1)); // Reads higher than it should.
+                            v.Add(new Voltage("+5V", 3, 147, 100));  // Reads higher than it should.
+                            // Commented because I don't know if it makes sense.
+                            //v.Add(new Voltage("VCC ST", 4)); // Reads 4.2V.
+                            //v.Add(new Voltage("VCCIN AUX", 5)); // Reads 2.2V.
+                            //v.Add(new Voltage("CPU GT", 6)); // Reads 2.6V.
+                            //v.Add(new Voltage("3VSB", 7, 10, 10)); // Reads 5.8V ? 
+                            v.Add(new Voltage("VBat", 8, 10, 10)); // Reads higher than it should at 3.4V.
+                            t.Add(new Temperature("System 1", 0));
+                            t.Add(new Temperature("System 2", 1));  // Not sure what sensor is this.
+                            t.Add(new Temperature("CPU", 2));
+                            f.Add(new Fan("CPU Fan", 1));
+                            f.Add(new Fan("CPU Optional fan", 2));
+                            f.Add(new Fan("System Fan", 4));
+                            c.Add(new Ctrl("CPU Fan", 1));
+                            c.Add(new Ctrl("CPU Optional Fan", 2));
+                            c.Add(new Ctrl("System Fan", 4));
+
+                            break;
+                        }
+                        default:
+                        {
+                            v.Add(new Voltage("Voltage #1", 0, true));
+                            v.Add(new Voltage("Voltage #2", 1, true));
+                            v.Add(new Voltage("Voltage #3", 2, true));
+                            v.Add(new Voltage("Voltage #4", 3, true));
+                            v.Add(new Voltage("Voltage #5", 4, true));
+                            v.Add(new Voltage("Voltage #6", 5, true));
+                            v.Add(new Voltage("Voltage #7", 6, true));
+                            v.Add(new Voltage("3VSB", 7, 10, 10, 0, true));
+                            v.Add(new Voltage("VBat", 8, 10, 10));
+
+                            for (int i = 0; i < superIO.Temperatures.Length; i++)
+                                t.Add(new Temperature("Temperature #" + (i + 1), i));
+
+                            for (int i = 0; i < superIO.Fans.Length; i++)
+                                f.Add(new Fan("Fan #" + (i + 1), i));
+
+                            for (int i = 0; i < superIO.Controls.Length; i++)
+                                c.Add(new Ctrl("Fan Control #" + (i + 1), i));
+
+                            break;
+                        }
+                    }
+
+                    break;
+                }
                 case Manufacturer.Shuttle:
                 {
                     switch (model)
@@ -1678,6 +1813,7 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                     switch (model)
                     {
                         case Model.X570_AORUS_MASTER: // IT879XE
+                        case Model.X570_AORUS_ULTRA:
                         {
                             v.Add(new Voltage("CPU VDD18", 0));
                             v.Add(new Voltage("DDRVTT AB", 1));
@@ -1739,6 +1875,18 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             c.Add(new Ctrl("Fan Control #6", 1));
                             c.Add(new Ctrl("Fan Control #4", 2));
 
+                            break;
+                        }
+                        case Model.Z690_AORUS_PRO:
+                        {
+                            t.Add(new Temperature("System #3", 0));
+                            t.Add(new Temperature("System #4", 2));
+                            f.Add(new Fan("System Fan #5", 0));
+                            f.Add(new Fan("System Fan #6", 1));
+                            f.Add(new Fan("System Fan #4", 2));
+                            c.Add(new Ctrl("Fan Control #5", 0));
+                            c.Add(new Ctrl("Fan Control #6", 1));
+                            c.Add(new Ctrl("Fan Control #4", 2));
                             break;
                         }
                         default:
@@ -2424,11 +2572,16 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             t.Add(new Temperature("Temperature #4", 5));
                             t.Add(new Temperature("Temperature #5", 6));
 
-                            for (int i = 0; i < superIO.Fans.Length; i++)
-                                f.Add(new Fan("Fan #" + (i + 1), i));
+                            // CPU Fan Optional uses the same fancontrol as CPU Fan.
+                            // Water Pump speed can only be read from the EC.
+                            string[] fanNames = { "Chassis Fan 1", "CPU Fan", "Chassis Fan 2", "Chassis Fan 3", "Chassis Fan 4", "CPU Fan Optional" };
+                            string[] fanControlNames = { "Chassis Fan 1", "CPU Fan", "Chassis Fan 2", "Chassis Fan 3", "Chassis Fan 4", "Water Pump" };
 
-                            for (int i = 0; i < superIO.Controls.Length; i++)
-                                c.Add(new Ctrl("Fan Control #" + (i + 1), i));
+                            for (int i = 0; i < fanNames.Length; i++)
+                                f.Add(new Fan(fanNames[i], i));
+
+                            for (int i = 0; i < fanControlNames.Length; i++)
+                                c.Add(new Ctrl(fanControlNames[i] + " Control", i));
 
                             break;
                         }
@@ -2483,6 +2636,7 @@ namespace PCHardwareMonitor.Hardware.Motherboard
                             break;
                         }
                         case Model.ROG_CROSSHAIR_VIII_HERO: // NCT6798D
+                        case Model.ROG_CROSSHAIR_VIII_HERO_WIFI: // NCT6798D
                         case Model.ROG_CROSSHAIR_VIII_DARK_HERO: // NCT6798D
                         case Model.ROG_CROSSHAIR_VIII_FORMULA: // NCT6798D
                         {

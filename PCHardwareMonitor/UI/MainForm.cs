@@ -50,6 +50,7 @@ namespace PCHardwareMonitor.UI
         private readonly UserOption _readHddSensors;
         private readonly UserOption _readNicSensors;
         private readonly UserOption _readPsuSensors;
+        private readonly UserOption _readBatterySensors;
 
         private readonly UserOption _showGadget;
         private UserRadioGroup _plotLocation;
@@ -167,6 +168,7 @@ namespace PCHardwareMonitor.UI
             _computer.HardwareRemoved += HardwareRemoved;
             _computer.Open();
 
+            backgroundUpdater.DoWork += BackgroundUpdater_DoWork;
             timer.Enabled = true;
 
             UserOption showHiddenSensors = new UserOption("hiddenMenuItem", false, hiddenMenuItem, _settings);
@@ -263,6 +265,12 @@ namespace PCHardwareMonitor.UI
             _readPsuSensors.Changed += delegate
             {
                 _computer.IsPsuEnabled = _readPsuSensors.Value;
+            };
+
+            _readBatterySensors = new UserOption("batteryMenuItem", true, batteryMenuItem, _settings);
+            _readBatterySensors.Changed += delegate
+            {
+                _computer.IsBatteryEnabled = _readBatterySensors.Value;
             };
 
             _showGadget = new UserOption("gadgetMenuItem", false, gadgetMenuItem, _settings);
@@ -392,6 +400,22 @@ namespace PCHardwareMonitor.UI
             };
 
             Microsoft.Win32.SystemEvents.PowerModeChanged += PowerModeChanged;
+        }
+
+        private void BackgroundUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _computer.Accept(_updateVisitor);
+
+            if (_logSensors != null && _logSensors.Value && _delayCount >= 4)
+                _logger.Log();
+
+            if (_cloudReport != null && _cloudReport.Value && _delayCount >= 4)
+                _ = _cloudReporter.CloudReportAsync(_root);
+
+            if (_delayCount < 4)
+                _delayCount++;
+
+            _plotPanel.InvalidatePlot();
         }
 
         private void PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs eventArgs)
@@ -653,8 +677,6 @@ namespace PCHardwareMonitor.UI
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            _computer.Accept(_updateVisitor);
-
             if(GetToken() == "")
             {
                 statusBarTextLabel.ForeColor = Color.Red;
@@ -667,19 +689,12 @@ namespace PCHardwareMonitor.UI
             }
 
             treeView.Invalidate();
-            _plotPanel.InvalidatePlot();
             _systemTray.Redraw();
             _gadget?.Redraw();
             _wmiProvider?.Update();
 
-            if (_logSensors != null && _logSensors.Value && _delayCount >= 4)
-                _logger.Log();
-
-            if (_cloudReport != null && _cloudReport.Value && _delayCount >= 4)
-                _ = _cloudReporter.CloudReportAsync(_root);
-
-            if (_delayCount < 4)
-                _delayCount++;
+            if (!backgroundUpdater.IsBusy)
+                backgroundUpdater.RunWorkerAsync();
 
             RestoreCollapsedNodeState(treeView);
         }
@@ -775,6 +790,8 @@ namespace PCHardwareMonitor.UI
             if (_runWebServer.Value)
                 Server.Quit();
             _systemTray.Dispose();
+            timer.Dispose();
+            backgroundUpdater.Dispose();
 
             Application.Exit();
         }
