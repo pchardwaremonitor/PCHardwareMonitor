@@ -28,7 +28,7 @@ You can check if it works properly on your motherboard. For many manufacturers, 
 **PCHardwareMonitor application:** - [How to compile the application](https://docs.microsoft.com/en-us/visualstudio/ide/compiling-and-building-in-visual-studio)
 *Compiling PCHardwareMonitor requires [Visual Studio 2022](https://docs.microsoft.com/en-us/visualstudio/ide/whats-new-visual-studio-2022?view=vs-2022).*
 1. Download the repository and compile 'PCHardwareMonitor'.
-2. You can start the **net452\PCHardwareMonitor.exe** application immediately.
+2. You can start the **net472\PCHardwareMonitor.exe** application immediately.
 
 ## License
 PCHardwareMonitor is free and open source software licensed under MPL 2.0. You can use it in private and commercial projects. Keep in mind that you must include a copy of the license in your project.

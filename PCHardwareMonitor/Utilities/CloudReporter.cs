@@ -65,8 +65,15 @@ namespace PCHardwareMonitor.Utilities
             {
                 try
                 {
+                    string api_server = "";
+#if DEBUG
+                    api_server = "http://127.0.0.1:8000";
+#else
+                    api_server = "https://api.pchwmonitor.com";
+                    #endif
+
                     HttpResponseMessage response = await client.PostAsync(
-                    "http://127.0.0.1:8000/monitor/",
+                    api_server + "/monitor/",
                      new StringContent(cloudJsonData, Encoding.UTF8, "application/json"));
                 }
                 catch (Exception e) { }

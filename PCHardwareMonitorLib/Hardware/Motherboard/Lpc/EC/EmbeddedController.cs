@@ -258,7 +258,7 @@ namespace PCHardwareMonitor.Hardware.Motherboard.Lpc.EC
         internal static EmbeddedController Create(Model model, ISettings settings)
         {
             var boards = _boards.Where(b => b.Models.Contains(model)).ToList();
-            if (boards.Count == 0)
+            //if (boards.Count == 0)
                 return null;
             if (boards.Count > 1)
                 throw new MultipleBoardRecordsFoundException(model.ToString());
