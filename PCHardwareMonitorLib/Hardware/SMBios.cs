@@ -1304,7 +1304,7 @@ namespace PCHardwareMonitor.Hardware
         public SystemInformation System { get; }
 
         /// <summary>
-        /// Gets <inheritdoc cref="LibreHardwareMonitor.Hardware.SystemEnclosure" />
+        /// Gets <inheritdoc cref="PCHardwareMonitor.Hardware.SystemEnclosure" />
         /// </summary>
         public SystemEnclosure SystemEnclosure { get; }
 
