@@ -410,7 +410,7 @@ namespace PCHardwareMonitor.UI
                 _logger.Log();
 
             if (_cloudReport != null && _cloudReport.Value && _delayCount >= 4)
-                _ = _cloudReporter.CloudReportAsync(_root);
+                _ = _cloudReporter.CloudReportAsync(_root, statusBarTextLabel);
 
             if (_delayCount < 4)
                 _delayCount++;
@@ -685,7 +685,6 @@ namespace PCHardwareMonitor.UI
             else
             {
                 statusBarTextLabel.ForeColor = Color.Black;
-                statusBarTextLabel.Text = "Cloud reporting OK.";
             }
 
             treeView.Invalidate();

@@ -9,13 +9,15 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Node = PCHardwareMonitor.UI.Node;
+using System.Diagnostics;
 
 namespace PCHardwareMonitor.Utilities
 {
     internal class CloudReporter
     {
         private string _fileName;
-        private DateTime _lastLoggedTime = DateTime.MinValue;
+        private double _nextReportTime = DateTime.MinValue.TimeOfDay.TotalMilliseconds;
+        private double _lastReportTime = DateTime.MaxValue.TimeOfDay.TotalMilliseconds;
 
         public string APIToken;
 
@@ -27,12 +29,15 @@ namespace PCHardwareMonitor.Utilities
             _fileName = GetFileName();
         }
 
-        public async Task CloudReportAsync(Node root)
+        public async Task CloudReportAsync(Node root, System.Windows.Forms.ToolStripStatusLabel statusBarTextLabel)
         {
-            DateTime now = DateTime.Now;
-
-            if (_lastLoggedTime + ReportingInterval - new TimeSpan(5000000) > now)
+            // Next report time has not been reached
+            if (_nextReportTime > DateTime.Now.TimeOfDay.TotalMilliseconds)
+            {
                 return;
+            }
+
+            statusBarTextLabel.Text = "[" + DateTime.Now + "] Sending Cloud Report.";
 
             JObject json = new JObject();
 
@@ -59,9 +64,13 @@ namespace PCHardwareMonitor.Utilities
                 }
             }
 
+            WriteReportFile(reportData);
+
             string cloudJsonData = "{\"Data\": \"" + compressedData + "\"}";
 
-            using (var client = new HttpClient() { Timeout = TimeSpan.FromSeconds(4) })
+            _nextReportTime = DateTime.MaxValue.TimeOfDay.TotalMilliseconds;
+
+            using (var client = new HttpClient())
             {
                 try
                 {
@@ -70,17 +79,44 @@ namespace PCHardwareMonitor.Utilities
                     api_server = "http://127.0.0.1:8000";
 #else
                     api_server = "https://api.pchwmonitor.com";
-                    #endif
-
+#endif
+                    var stopwatch = new Stopwatch();
+                    stopwatch.Start();
                     HttpResponseMessage response = await client.PostAsync(
                     api_server + "/monitor/",
                      new StringContent(cloudJsonData, Encoding.UTF8, "application/json"));
-                }
-                catch (Exception e) { }
-            }
-            WriteReportFile(reportDataFile);
 
-            _lastLoggedTime = now;
+                    string response_status = response.Content.ReadAsStringAsync().Result.Replace("\"", "");
+
+                    stopwatch.Stop();
+
+                    if (stopwatch.ElapsedMilliseconds < 1000)
+                    {
+                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + stopwatch.ElapsedMilliseconds + " ms";
+                    }
+                    else
+                    {
+                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + Math.Round(stopwatch.ElapsedMilliseconds / 1000.0, 1) + " s";
+                    }
+
+                    double nextExpectedReportTime = _lastReportTime + ReportingInterval.TotalMilliseconds;
+                    if (nextExpectedReportTime >= DateTime.Now.TimeOfDay.TotalMilliseconds)
+                    {
+                        _nextReportTime = DateTime.MinValue.TimeOfDay.TotalMilliseconds;
+                    }
+                    else
+                    {
+                        _nextReportTime = DateTime.Now.TimeOfDay.TotalMilliseconds + (nextExpectedReportTime - DateTime.Now.TimeOfDay.TotalMilliseconds);
+                    }
+
+                    _lastReportTime = DateTime.Now.TimeOfDay.TotalMilliseconds;
+                }
+                catch (Exception e) {
+                    statusBarTextLabel.Text = "Cloud Reporting Error.";
+
+                    _lastReportTime = DateTime.Now.TimeOfDay.TotalMilliseconds;
+                }
+            }
         }
 
         private void WriteReportFile(string reportData)
