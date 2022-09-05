@@ -21,7 +21,6 @@ namespace PCHardwareMonitor.Hardware.Gpu
             if (!NvApi.IsAvailable)
                 return;
 
-
             _report.AppendLine("NvApi");
             _report.AppendLine();
 

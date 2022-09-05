@@ -114,6 +114,7 @@ namespace PCHardwareMonitor.Utilities
                 catch (Exception e) {
                     statusBarTextLabel.Text = "Cloud Reporting Error.";
 
+                    _nextReportTime = DateTime.MinValue.TimeOfDay.TotalMilliseconds;
                     _lastReportTime = DateTime.Now.TimeOfDay.TotalMilliseconds;
                 }
             }
