@@ -18,7 +18,7 @@ namespace PCHardwareMonitor.Hardware.Network
         private readonly Sensor _uploadSpeed;
         private long _bytesDownloaded;
         private long _bytesUploaded;
-        private long _lastTick;
+        private double _lastTick;
 
         public Network(NetworkInterface networkInterface, ISettings settings)
             : base(networkInterface.Name, new Identifier("nic", networkInterface.Id), settings)
@@ -36,7 +36,7 @@ namespace PCHardwareMonitor.Hardware.Network
             ActivateSensor(_networkUtilization);
             _bytesUploaded = NetworkInterface.GetIPStatistics().BytesSent;
             _bytesDownloaded = NetworkInterface.GetIPStatistics().BytesReceived;
-            _lastTick = Stopwatch.GetTimestamp();
+            _lastTick = DateTime.Now.TimeOfDay.TotalMilliseconds;
         }
 
         public override HardwareType HardwareType
@@ -54,8 +54,7 @@ namespace PCHardwareMonitor.Hardware.Network
                     return;
 
 
-                long newTick = Stopwatch.GetTimestamp();
-                double dt = new TimeSpan(newTick - _lastTick).TotalSeconds;
+                double dt = (DateTime.Now.TimeOfDay.TotalMilliseconds - _lastTick) / 1000;
 
                 IPv4InterfaceStatistics interfaceStats = NetworkInterface.GetIPv4Statistics();
 
@@ -96,7 +95,7 @@ namespace PCHardwareMonitor.Hardware.Network
                 // Store the recorded values and time, so they can be used in the next update
                 _bytesUploaded = interfaceStats.BytesSent;
                 _bytesDownloaded = interfaceStats.BytesReceived;
-                _lastTick = newTick;
+                _lastTick = DateTime.Now.TimeOfDay.TotalMilliseconds;
             }
             catch (NetworkInformationException networkInformationException) when (unchecked(networkInformationException.HResult == (int)0x80004005))
             {

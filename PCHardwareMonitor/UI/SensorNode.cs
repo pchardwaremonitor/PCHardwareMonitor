@@ -171,6 +171,11 @@ namespace PCHardwareMonitor.UI
             get { return ValueToString(Sensor.Value); }
         }
 
+        public string RawValue
+        {
+            get { return Sensor.Value.ToString(); }
+        }
+
         public string ValueToString(float? value)
         {
             if (value.HasValue)

@@ -80,23 +80,21 @@ namespace PCHardwareMonitor.Utilities
 #else
                     api_server = "https://api.pchwmonitor.com";
 #endif
-                    var stopwatch = new Stopwatch();
-                    stopwatch.Start();
+                    double start_time = DateTime.Now.TimeOfDay.TotalMilliseconds;
                     HttpResponseMessage response = await client.PostAsync(
                     api_server + "/monitor/",
                      new StringContent(cloudJsonData, Encoding.UTF8, "application/json"));
 
                     string response_status = response.Content.ReadAsStringAsync().Result.Replace("\"", "");
+                    double elapsed_time = DateTime.Now.TimeOfDay.TotalMilliseconds - start_time;
 
-                    stopwatch.Stop();
-
-                    if (stopwatch.ElapsedMilliseconds < 1000)
+                    if (elapsed_time < 1000)
                     {
-                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + stopwatch.ElapsedMilliseconds + " ms";
+                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + (int)elapsed_time + " ms";
                     }
                     else
                     {
-                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + Math.Round(stopwatch.ElapsedMilliseconds / 1000.0, 1) + " s";
+                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + Math.Round(elapsed_time / 1000.0, 1) + " s";
                     }
 
                     double nextExpectedReportTime = _lastReportTime + ReportingInterval.TotalMilliseconds;
@@ -149,9 +147,22 @@ namespace PCHardwareMonitor.Utilities
             {
                 jsonNode["SensorId"] = sensorNode.Sensor.Identifier.ToString();
                 jsonNode["Type"] = sensorNode.Sensor.SensorType.ToString();
-                jsonNode["Min"] = sensorNode.Min;
                 jsonNode["Value"] = sensorNode.Value;
-                jsonNode["Max"] = sensorNode.Max;
+
+                // Only add RawValue for Throughput of Network
+                if (jsonNode["Type"].ToString().Equals("Throughput") && (sensorNode.Parent is TypeNode) &&
+                    (sensorNode.Parent.Parent is HardwareNode) &&
+                    (((HardwareNode)sensorNode.Parent.Parent).Hardware.HardwareType is HardwareType.Network))
+                {
+                    jsonNode["RawValue"] = sensorNode.RawValue;
+                }
+                // Ony add RawValue for Data of Memory
+                else if(jsonNode["Type"].ToString().Equals("Data") && (sensorNode.Parent is TypeNode) &&
+                    (sensorNode.Parent.Parent is HardwareNode) &&
+                    (((HardwareNode)sensorNode.Parent.Parent).Hardware.HardwareType is HardwareType.Memory))
+                {
+                    jsonNode["RawValue"] = sensorNode.RawValue;
+                }
             }
             else if (n is HardwareNode hardwareNode)
             {
