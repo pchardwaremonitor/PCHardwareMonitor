@@ -63,6 +63,9 @@ namespace PCHardwareMonitor.UI
                 case HardwareType.Battery:
                     image = Utilities.EmbeddedResources.GetImage("battery.png");
                     break;
+                case HardwareType.Screen:
+                    image = Utilities.EmbeddedResources.GetImage("computer.png");
+                    break;
                 default:
                     image = new Bitmap(1, 1);
                     break;

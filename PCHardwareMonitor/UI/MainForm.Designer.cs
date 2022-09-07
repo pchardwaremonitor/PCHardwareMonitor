@@ -135,6 +135,7 @@ namespace PCHardwareMonitor.UI
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusBarTextLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.batteryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.screenMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundUpdater = new System.ComponentModel.BackgroundWorker();
             this.mainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -277,7 +278,8 @@ namespace PCHardwareMonitor.UI
             this.hddMenuItem,
             this.nicMenuItem,
             this.psuMenuItem,
-            this.batteryMenuItem});
+            this.batteryMenuItem,
+            this.screenMenuItem});
             this.menuItem5.Name = "menuItem5";
             this.menuItem5.Size = new System.Drawing.Size(180, 22);
             this.menuItem5.Text = "Hardware";
@@ -929,6 +931,11 @@ namespace PCHardwareMonitor.UI
             this.batteryMenuItem.Name = "batteryMenuItem";
             this.batteryMenuItem.Size = new System.Drawing.Size(180, 22);
             this.batteryMenuItem.Text = "Batteries";
+            // screenMenuItem
+            // 
+            this.screenMenuItem.Name = "screenMenuItem";
+            this.screenMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.screenMenuItem.Text = "Screens";
             // 
             // MainForm
             // 
@@ -1059,6 +1066,7 @@ namespace PCHardwareMonitor.UI
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel statusBarTextLabel;
         private System.Windows.Forms.ToolStripMenuItem batteryMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem screenMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundUpdater;
     }
 }

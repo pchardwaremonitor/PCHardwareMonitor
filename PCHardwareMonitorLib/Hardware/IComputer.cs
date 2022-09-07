@@ -109,6 +109,12 @@ namespace PCHardwareMonitor.Hardware
         bool IsStorageEnabled { get; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether collecting information about <see cref="HardwareType.Screen" /> devices should be enabled and updated.
+        /// </summary>
+        /// <returns><see langword="true" /> if a given category of devices is already enabled.</returns>
+        bool IsScreenEnabled { get; }
+
+        /// <summary>
         /// Generates full PCHardwareMonitor report for devices that have been enabled.
         /// </summary>
         /// <returns>A formatted text string with library, OS and hardware information.</returns>

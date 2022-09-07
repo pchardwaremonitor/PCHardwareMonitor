@@ -33,6 +33,7 @@ namespace PCHardwareMonitor.UI
         private readonly Color[] _plotColorPalette;
         private readonly PlotPanel _plotPanel;
         private readonly UserOption _readBatterySensors;
+        private readonly UserOption _readScreenSensors;
         private readonly UserOption _readCpuSensors;
         private readonly UserOption _readFanControllersSensors;
         private readonly UserOption _readGpuSensors;
@@ -230,6 +231,9 @@ namespace PCHardwareMonitor.UI
 
             _readBatterySensors = new UserOption("batteryMenuItem", true, batteryMenuItem, _settings);
             _readBatterySensors.Changed += delegate { _computer.IsBatteryEnabled = _readBatterySensors.Value; };
+
+            _readScreenSensors = new UserOption("screenMenuItem", true, screenMenuItem, _settings);
+            _readScreenSensors.Changed += delegate { _computer.IsScreenEnabled = _readScreenSensors.Value; };
 
             _showGadget = new UserOption("gadgetMenuItem", false, gadgetMenuItem, _settings);
             _showGadget.Changed += delegate

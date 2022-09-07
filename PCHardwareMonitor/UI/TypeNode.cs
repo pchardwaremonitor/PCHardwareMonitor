@@ -31,6 +31,10 @@ namespace PCHardwareMonitor.UI
                     Image = Utilities.EmbeddedResources.GetImage("voltage.png");
                     Text = "Currents";
                     break;
+                case SensorType.Screen:
+                    Image = Utilities.EmbeddedResources.GetImage("computer.png");
+                    Text = "Screen";
+                    break;
                 case SensorType.Energy:
                     Image = Utilities.EmbeddedResources.GetImage("battery.png");
                     Text = "Capacities";

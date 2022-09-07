@@ -76,6 +76,9 @@ namespace PCHardwareMonitor.UI
                 case SensorType.TimeSpan:
                     Format = "{0:g}";
                     break;
+                case SensorType.Screen:
+                    Format = "{0:g}";
+                    break;
                 case SensorType.Energy:
                     Format = "{0:F0} mWh";
                     break;

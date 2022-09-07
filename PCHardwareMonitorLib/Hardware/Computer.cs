@@ -23,6 +23,7 @@ using PCHardwareMonitor.Hardware.Motherboard;
 using PCHardwareMonitor.Hardware.Network;
 using PCHardwareMonitor.Hardware.Psu.Corsair;
 using PCHardwareMonitor.Hardware.Storage;
+using PCHardwareMonitor.Hardware.Screen;
 
 namespace PCHardwareMonitor.Hardware
 {
@@ -46,6 +47,7 @@ namespace PCHardwareMonitor.Hardware
         private bool _psuEnabled;
         private SMBios _smbios;
         private bool _storageEnabled;
+        private bool _screenEnabled;
 
         /// <summary>
         /// Creates a new <see cref="IComputer" /> instance with basic initial <see cref="Settings" />.
@@ -274,6 +276,24 @@ namespace PCHardwareMonitor.Hardware
                 }
 
                 _storageEnabled = value;
+            }
+        }
+
+        /// <inheritdoc />
+        public bool IsScreenEnabled
+        {
+            get { return _screenEnabled; }
+            set
+            {
+                if (_open && value != _screenEnabled)
+                {
+                    if (value)
+                        Add(new ScreenGroup(_settings));
+                    else
+                        RemoveType<ScreenGroup>();
+                }
+
+                _screenEnabled = value;
             }
         }
 
@@ -533,6 +553,9 @@ namespace PCHardwareMonitor.Hardware
 
             if (_batteryEnabled)
                 Add(new BatteryGroup(_settings));
+
+            if (_screenEnabled)
+                Add(new ScreenGroup(_settings));
         }
 
         private static void NewSection(TextWriter writer)

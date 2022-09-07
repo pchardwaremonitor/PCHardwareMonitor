@@ -23,6 +23,7 @@ namespace PCHardwareMonitor.Hardware
         Cooler,
         EmbeddedController,
         Psu,
-        Battery
+        Battery,
+        Screen
     }
 }
