@@ -64,7 +64,7 @@ namespace PCHardwareMonitor.Utilities
                 }
             }
 
-            WriteReportFile(reportData);
+            WriteReportFile(reportDataFile);
 
             string cloudJsonData = "{\"Data\": \"" + compressedData + "\"}";
 
@@ -187,7 +187,10 @@ namespace PCHardwareMonitor.Utilities
                 children.Add(GenerateJsonForNode(child, ref nodeIndex));
             }
 
-            jsonNode["Children"] = children;
+            if (children.Count > 0)
+            {
+                jsonNode["Children"] = children;
+            }
 
             return jsonNode;
         }
