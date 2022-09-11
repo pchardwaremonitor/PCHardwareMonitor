@@ -101,6 +101,7 @@ namespace PCHardwareMonitor.UI
             nodeTextBoxMin.DrawText += NodeTextBoxText_DrawText;
             nodeTextBoxMax.DrawText += NodeTextBoxText_DrawText;
             nodeTextBoxText.EditorShowing += NodeTextBoxText_EditorShowing;
+            nodeTextBoxText.EditEnabled = false;
 
             foreach (TreeColumn column in treeView.Columns)
                 column.Width = Math.Max(20, Math.Min(400, _settings.GetValue("treeView.Columns." + column.Header + ".Width", column.Width)));
