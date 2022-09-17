@@ -182,11 +182,11 @@ namespace PCHardwareMonitor.UI
             UserOption showMax = new("maxMenuItem", true, maxMenuItem, _settings);
             showMax.Changed += delegate { treeView.Columns[3].IsVisible = showMax.Value; };
 
-            var _ = new UserOption("startMinMenuItem", false, startMinMenuItem, _settings);
+            var _ = new UserOption("startMinMenuItem", true, startMinMenuItem, _settings);
             _minimizeToTray = new UserOption("minTrayMenuItem", true, minTrayMenuItem, _settings);
             _minimizeToTray.Changed += delegate { _systemTray.IsMainIconEnabled = _minimizeToTray.Value; };
 
-            _minimizeOnClose = new UserOption("minCloseMenuItem", false, minCloseMenuItem, _settings);
+            _minimizeOnClose = new UserOption("minCloseMenuItem", true, minCloseMenuItem, _settings);
 
             _autoStart = new UserOption(null, _startupManager.Startup, startupMenuItem, _settings);
             _autoStart.Changed += delegate
@@ -339,7 +339,7 @@ namespace PCHardwareMonitor.UI
 
             _cloudReport = new UserOption("cloudReportMenuItem", true, cloudReportMenuItem, _settings);
 
-            _reportingInterval = new UserRadioGroup("reportingInterval", 1,
+            _reportingInterval = new UserRadioGroup("reportingInterval", 0,
                 new[] { report1sMenuItem, report5sMenuItem}, _settings);
             _reportingInterval.Changed += (sender, e) =>
             {
@@ -737,7 +737,7 @@ namespace PCHardwareMonitor.UI
             if(GetToken() == "")
             {
                 statusBarTextLabel.ForeColor = Color.Red;
-                statusBarTextLabel.Text = "Cloud Token is not set. Go to Options -> Cloud Token to set it.";
+                statusBarTextLabel.Text = "Cloud Token is not set. Go to Options -> Set Cloud Token to set it.";
             }
             else
             {

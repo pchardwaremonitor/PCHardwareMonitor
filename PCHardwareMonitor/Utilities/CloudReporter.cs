@@ -37,7 +37,10 @@ namespace PCHardwareMonitor.Utilities
                 return;
             }
 
-            statusBarTextLabel.Text = "[" + DateTime.Now + "] Sending Cloud Report.";
+            if (!APIToken.Equals(""))
+            {
+                statusBarTextLabel.Text = "[" + DateTime.Now + "] Sending Cloud Report.";
+            }
 
             JObject json = new JObject();
 
@@ -88,13 +91,16 @@ namespace PCHardwareMonitor.Utilities
                     string response_status = response.Content.ReadAsStringAsync().Result.Replace("\"", "");
                     double elapsed_time = DateTime.Now.TimeOfDay.TotalMilliseconds - start_time;
 
-                    if (elapsed_time < 1000)
+                    if (response_status.Equals("OK"))
                     {
-                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + (int)elapsed_time + " ms";
-                    }
-                    else
-                    {
-                        statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + Math.Round(elapsed_time / 1000.0, 1) + " s";
+                        if (elapsed_time < 1000)
+                        {
+                            statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + (int)elapsed_time + " ms";
+                        }
+                        else
+                        {
+                            statusBarTextLabel.Text = "[" + DateTime.Now + "] Cloud Reporting " + response_status + ". Time: " + Math.Round(elapsed_time / 1000.0, 1) + " s";
+                        }
                     }
 
                     double nextExpectedReportTime = _lastReportTime + ReportingInterval.TotalMilliseconds;

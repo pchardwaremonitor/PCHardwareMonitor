@@ -32,14 +32,15 @@
             this.cloudTokenTextBox = new System.Windows.Forms.TextBox();
             this.cloudTokenLabel = new System.Windows.Forms.Label();
             this.cloudOKButton = new System.Windows.Forms.Button();
-            this.cloudCancelButton = new System.Windows.Forms.Button();
+            this.webLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.loginTextLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // cloudTokenTextBox
             // 
-            this.cloudTokenTextBox.Location = new System.Drawing.Point(81, 12);
+            this.cloudTokenTextBox.Location = new System.Drawing.Point(86, 12);
             this.cloudTokenTextBox.Name = "cloudTokenTextBox";
-            this.cloudTokenTextBox.Size = new System.Drawing.Size(209, 20);
+            this.cloudTokenTextBox.Size = new System.Drawing.Size(256, 20);
             this.cloudTokenTextBox.TabIndex = 0;
             // 
             // cloudTokenLabel
@@ -53,7 +54,7 @@
             // 
             // cloudOKButton
             // 
-            this.cloudOKButton.Location = new System.Drawing.Point(157, 84);
+            this.cloudOKButton.Location = new System.Drawing.Point(146, 86);
             this.cloudOKButton.Name = "cloudOKButton";
             this.cloudOKButton.Size = new System.Drawing.Size(75, 23);
             this.cloudOKButton.TabIndex = 2;
@@ -61,24 +62,33 @@
             this.cloudOKButton.UseVisualStyleBackColor = true;
             this.cloudOKButton.Click += new System.EventHandler(this.CloudOKButton_Click);
             // 
-            // cloudCancelButton
+            // webLinkLabel
             // 
-            this.cloudCancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cloudCancelButton.Location = new System.Drawing.Point(67, 84);
-            this.cloudCancelButton.Name = "cloudCancelButton";
-            this.cloudCancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cloudCancelButton.TabIndex = 3;
-            this.cloudCancelButton.Text = "Cancel";
-            this.cloudCancelButton.UseVisualStyleBackColor = true;
-            this.cloudCancelButton.Click += new System.EventHandler(this.CloudCancelButton_Click);
+            this.webLinkLabel.AutoSize = true;
+            this.webLinkLabel.Location = new System.Drawing.Point(12, 64);
+            this.webLinkLabel.Name = "webLinkLabel";
+            this.webLinkLabel.Size = new System.Drawing.Size(126, 13);
+            this.webLinkLabel.TabIndex = 8;
+            this.webLinkLabel.TabStop = true;
+            this.webLinkLabel.Text = "https://pchwmonitor.com";
+            this.webLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WebLinkLabel_LinkClicked);
+            // 
+            // loginTextLabel
+            // 
+            this.loginTextLabel.AutoSize = true;
+            this.loginTextLabel.Location = new System.Drawing.Point(11, 41);
+            this.loginTextLabel.Name = "loginTextLabel";
+            this.loginTextLabel.Size = new System.Drawing.Size(321, 13);
+            this.loginTextLabel.TabIndex = 9;
+            this.loginTextLabel.Text = "Login to the PC Hardware Monitor website to get your cloud token.";
             // 
             // CloudForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.cloudCancelButton;
-            this.ClientSize = new System.Drawing.Size(302, 119);
-            this.Controls.Add(this.cloudCancelButton);
+            this.ClientSize = new System.Drawing.Size(354, 121);
+            this.Controls.Add(this.loginTextLabel);
+            this.Controls.Add(this.webLinkLabel);
             this.Controls.Add(this.cloudOKButton);
             this.Controls.Add(this.cloudTokenLabel);
             this.Controls.Add(this.cloudTokenTextBox);
@@ -96,6 +106,7 @@
         private System.Windows.Forms.TextBox cloudTokenTextBox;
         private System.Windows.Forms.Label cloudTokenLabel;
         private System.Windows.Forms.Button cloudOKButton;
-        private System.Windows.Forms.Button cloudCancelButton;
+        private System.Windows.Forms.LinkLabel webLinkLabel;
+        private System.Windows.Forms.Label loginTextLabel;
     }
 }

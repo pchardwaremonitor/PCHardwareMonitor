@@ -762,7 +762,7 @@ namespace PCHardwareMonitor.UI
             // 
             this.cloudTokenMenuItem.Name = "cloudTokenMenuItem";
             this.cloudTokenMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.cloudTokenMenuItem.Text = "Cloud Token";
+            this.cloudTokenMenuItem.Text = "Set Cloud Token";
             this.cloudTokenMenuItem.Click += new System.EventHandler(this.CloudTokenMenuItem_Click);
             // 
             // reportingIntervalMenuItem

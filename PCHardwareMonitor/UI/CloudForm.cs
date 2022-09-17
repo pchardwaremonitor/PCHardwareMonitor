@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace PCHardwareMonitor.UI
@@ -20,11 +14,6 @@ namespace PCHardwareMonitor.UI
             _parent = m;
         }
 
-        private void CloudCancelButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void CloudOKButton_Click(object sender, EventArgs e)
         {
             _parent.SetToken(cloudTokenTextBox.Text);
@@ -34,6 +23,20 @@ namespace PCHardwareMonitor.UI
         private void CloudForm_Load(object sender, EventArgs e)
         {
             cloudTokenTextBox.Text = _parent.GetToken();
+
+            string url = "https://pchwmonitor.com/";
+            webLinkLabel.Text = url;
+            webLinkLabel.Links.Remove(webLinkLabel.Links[0]);
+            webLinkLabel.Links.Add(0, webLinkLabel.Text.Length, url);
+        }
+
+        private void WebLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(e.Link.LinkData.ToString()));
+            }
+            catch { }
         }
     }
 }
