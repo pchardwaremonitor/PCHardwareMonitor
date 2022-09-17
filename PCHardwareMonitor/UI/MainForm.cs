@@ -16,6 +16,7 @@ using Aga.Controls.Tree.NodeControls;
 using PCHardwareMonitor.Hardware;
 using PCHardwareMonitor.Utilities;
 using PCHardwareMonitor.Wmi;
+using AutoUpdaterDotNET;
 
 
 namespace PCHardwareMonitor.UI
@@ -56,6 +57,7 @@ namespace PCHardwareMonitor.UI
         private readonly UserOption _cloudReport;
         private readonly UserRadioGroup _reportingInterval;
         private readonly CloudReporter _cloudReporter;
+        private readonly UserOption _autoUpdate;
 
         private int _delayCount;
         private Form _plotForm;
@@ -188,7 +190,7 @@ namespace PCHardwareMonitor.UI
 
             _minimizeOnClose = new UserOption("minCloseMenuItem", true, minCloseMenuItem, _settings);
 
-            _autoStart = new UserOption(null, _startupManager.Startup, startupMenuItem, _settings);
+            _autoStart = new UserOption(null, true, startupMenuItem, _settings);
             _autoStart.Changed += delegate
             {
                 try
@@ -338,6 +340,22 @@ namespace PCHardwareMonitor.UI
             };
 
             _cloudReport = new UserOption("cloudReportMenuItem", true, cloudReportMenuItem, _settings);
+
+            _autoUpdate = new UserOption("autoUpdateMenuItem", true, autoUpdateMenuItem, _settings);
+
+            AutoUpdater.Start("https://pchwmonitor.com/Client.xml");
+            AutoUpdater.ShowSkipButton = true;
+            AutoUpdater.ShowRemindLaterButton = false;
+            AutoUpdater.Mandatory = true;
+
+            if (_autoUpdate.Value)
+            {
+                AutoUpdater.UpdateMode = Mode.ForcedDownload;
+            }
+            else
+            {
+                AutoUpdater.UpdateMode = Mode.Normal;
+            }
 
             _reportingInterval = new UserRadioGroup("reportingInterval", 0,
                 new[] { report1sMenuItem, report5sMenuItem}, _settings);
@@ -824,7 +842,7 @@ namespace PCHardwareMonitor.UI
 
             Bounds = newBounds;
 
-            RestoreCollapsedNodeState(treeView);
+            RestoreCollapsedNodeState(treeView);            
 
             FormClosed += MainForm_FormClosed;
         }

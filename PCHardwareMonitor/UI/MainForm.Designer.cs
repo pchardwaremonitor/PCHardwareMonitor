@@ -120,6 +120,7 @@ namespace PCHardwareMonitor.UI
             this.reportingIntervalMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.report1sMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
             this.report5sMenuItem = new PCHardwareMonitor.UI.ToolStripRadioButtonMenuItem();
+            this.autoUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webMenuItemSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.webMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runWebServerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -439,6 +440,7 @@ namespace PCHardwareMonitor.UI
             this.cloudReportMenuItem,
             this.cloudTokenMenuItem,
             this.reportingIntervalMenuItem,
+            this.autoUpdateMenuItem,
             this.webMenuItemSeparator,
             this.webMenuItem});
             this.optionsMenuItem.Name = "optionsMenuItem";
@@ -936,6 +938,11 @@ namespace PCHardwareMonitor.UI
             this.screenMenuItem.Name = "screenMenuItem";
             this.screenMenuItem.Size = new System.Drawing.Size(180, 22);
             this.screenMenuItem.Text = "Screens";
+            // autoUpdateMenuItem
+            // 
+            this.autoUpdateMenuItem.Name = "autoUpdateMenuItem";
+            this.autoUpdateMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.autoUpdateMenuItem.Text = "Auto update client";
             // 
             // MainForm
             // 
@@ -1068,6 +1075,7 @@ namespace PCHardwareMonitor.UI
         private System.Windows.Forms.ToolStripMenuItem batteryMenuItem;
         private System.Windows.Forms.ToolStripMenuItem screenMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundUpdater;
+        private System.Windows.Forms.ToolStripMenuItem autoUpdateMenuItem;
     }
 }
 
